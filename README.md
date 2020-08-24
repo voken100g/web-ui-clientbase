@@ -1,4 +1,4 @@
-# Voken HD Wallet Toolkit
+# Web-UI for Voken Proxy ClientBase
 
 ## Build Setup
 
