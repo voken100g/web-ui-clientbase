@@ -1,0 +1,17 @@
+.btn {
+  @apply relative inline-flex items-center px-4 py-2 border border-transparent rounded-md;
+  @apply text-sm leading-5 font-medium text-white bg-indigo-500;
+  @qpply transition duration-150 ease-in-out;
+}
+
+.btn:hover {
+  @apply bg-indigo-400;
+}
+
+.btn:focus {
+  @apply outline-none border-indigo-600;
+}
+
+.btn:active {
+  @apply bg-indigo-600;
+}
