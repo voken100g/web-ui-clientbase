@@ -48,11 +48,13 @@
 
           <button v-show="proxy.connected"
                   class="btn-connect"
+                  @click="setProxyDisconnected"
           >
             <fa :icon="['fas', 'bolt']"/>
           </button>
           <button v-show="!proxy.connected"
                   class="btn-connect"
+                  @click="setProxyConnected(proxy.id)"
           >
             <fa :icon="['fas', 'bolt']"/>
           </button>
@@ -138,7 +140,6 @@ export default {
     await this.syncBalance()
     await this.syncProxies()
     await this.setProxyConnected(this.randomInt(3))
-    await this.keepSyncConnected()
   },
   methods: {
     bytesDisplay(n) {
@@ -194,14 +195,23 @@ export default {
     },
     async setProxyConnected(proxyId) {
       await this.$store.dispatch('SET_PROXY_CONNECTED', proxyId)
+      await this.updateConnected()
+      await this.keepSyncConnected()
+    },
+    async setProxyDisconnected() {
+      // await this.$store.dispatch('SET_CONNECTED_UNPAID_TRAFFIC', 0)
+      await this.$store.dispatch('SET_CONNECTED_DOWN_SPEED', 0)
+      await this.$store.dispatch('SET_CONNECTED_UP_SPEED', 0)
+      await this.$store.dispatch('SET_PROXY_DISCONNECTED')
+      await this.$store.dispatch('CLEAR_CONNECTED_INTERVAL')
     },
     async updateConnected() {
-      await this.$store.dispatch('SET_CONNECTED_DOWN_SPEED', this.randomInt(300000))
-      await this.$store.dispatch('SET_CONNECTED_UP_SPEED', this.randomInt(100000))
       await this.$store.dispatch(
         'SET_CONNECTED_UNPAID_TRAFFIC',
-        this.$store.state.connected.unpaidTraffic + this.randomInt(100000)
+        this.$store.state.connected.unpaidTraffic + this.$store.state.connected.downSpeed
       )
+      await this.$store.dispatch('SET_CONNECTED_DOWN_SPEED', this.randomInt(300000))
+      await this.$store.dispatch('SET_CONNECTED_UP_SPEED', this.randomInt(100000))
     },
     async keepSyncConnected() {
       if (!this.$store.state.connected.updateInterval) {

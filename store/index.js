@@ -40,6 +40,11 @@ export const mutations = {
       state.proxies[proxyIndex].connected = true
     }
   },
+  SET_PROXY_DISCONNECTED(state) {
+    state.proxies.forEach(function(proxy, index) {
+      state.proxies[index].connected = false
+    })
+  },
   SET_CONNECTED_DOWN_SPEED(state, downSpeed) {
     state.connected.downSpeed = downSpeed
   },
@@ -51,6 +56,10 @@ export const mutations = {
   },
   SET_CONNECTED_INTERVAL(state, updateInterval) {
     state.connected.updateInterval = updateInterval
+  },
+  CLEAR_CONNECTED_INTERVAL(state) {
+    clearInterval(state.connected.updateInterval)
+    state.connected.updateInterval = null
   }
 }
 
@@ -68,6 +77,9 @@ export const actions = {
   SET_PROXY_CONNECTED({ commit }, proxyId) {
     commit('SET_PROXY_CONNECTED', proxyId)
   },
+  SET_PROXY_DISCONNECTED({ commit }) {
+    commit('SET_PROXY_DISCONNECTED')
+  },
   SET_CONNECTED_DOWN_SPEED({ commit }, downSpeed) {
     commit('SET_CONNECTED_DOWN_SPEED', downSpeed)
   },
@@ -79,5 +91,8 @@ export const actions = {
   },
   SET_CONNECTED_INTERVAL({ commit }, updateInterval) {
     commit('SET_CONNECTED_INTERVAL', updateInterval)
+  },
+  CLEAR_CONNECTED_INTERVAL({ commit }) {
+    commit('CLEAR_CONNECTED_INTERVAL')
   }
 }
