@@ -1,5 +1,6 @@
 import { join } from 'path'
 
+// const baseUrl = '/'
 const baseUrl = '/web-ui-clientbase/'
 
 export default {
@@ -98,8 +99,17 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
     'nuxt-fontawesome'
   ],
+
+  /*
+  ** Axios
+  */
+  axios: {
+    //
+  },
+
 
   /*
    ** Font Awesome

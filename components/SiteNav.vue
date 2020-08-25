@@ -42,7 +42,7 @@
         <div class="flex items-center">
           <div class="flex-shrink-0">
             <span class="rounded-md shadow-sm">
-              <a target="_blank" href="/web-wallet" class="btn">
+              <a target="_blank" href="/web-ui-wallet" class="btn">
                 <fa :icon="['fas', 'wallet']"/>
                 <span class="pl-2">
                   HD Wallet Toolkit

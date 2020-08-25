@@ -1,17 +1,19 @@
 <template>
   <div class="pt-6">
     <!-- wallet -->
-    <div class="flex flex-col lg:flex-row items-center justify-center text-center space-y-2 lg:space-y-0 space-x-8">
+    <div v-show="$store.state.address"
+         class="flex flex-col lg:flex-row items-center justify-center text-center space-y-2 lg:space-y-0 space-x-8">
       <div class="flex items-center justify-center space-x-6">
         <fa :icon="['fas', 'wallet']" class="text-4xl text-gray-500"/>
         <span class="text-lg sm:text-xl lg:text-2xl text-gray-400">
-          vfhs98j2y1W5u1y7Q4ap9A5f6bWu7A5rp
+          {{ $store.state.address }}
         </span>
       </div>
 
-      <div class="flex items-center justify-center space-x-2">
+      <div v-show="$store.state.balance"
+           class="flex items-center justify-center space-x-2">
         <div class="font-extrabold text-lg lg:text-xl text-indigo-600">
-          19345.267876
+          {{ balance }}
         </div>
         <div class="text-base lg:text-lg text-gray-400">
           Voken
@@ -24,7 +26,7 @@
 
       <!-- proxy containers -->
       <ul class="md:self-start md:w-1/2 lg:w-1/3 grid grid-cols-1 gap-y-4">
-        <li v-for="proxy in proxies" class="proxy-card" :class="{ 'connected': proxy.connected }">
+        <li v-for="proxy in this.$store.state.proxies" class="proxy-card" :class="{ 'connected': proxy.connected }">
           <div class="proxy-ident-icon-wrap">
             <ident-icon class="proxy-ident-icon" :value="proxy.address"/>
           </div>
@@ -62,7 +64,8 @@
       <div class="mt-6 md:mt-0 md:ml-4 md:self-start md:flex-grow">
 
         <!-- data board -->
-        <div class="bg-gray-50 pt-6 lg:pt-8">
+        <div v-show="this.$store.state.connected.unpaidTraffic"
+             class="bg-gray-50 pt-6 lg:pt-8">
           <div class="max-w-screen-xl mx-auto px-2 lg:px-4">
             <div class="max-w-4xl mx-auto text-center">
               <h2 class="text-2xl leading-5 font-extrabold text-gray-900 lg:text-3xl lg:leading-5">
@@ -84,7 +87,7 @@
                         Down speed
                       </dt>
                       <dd>
-                        13.9 KB/s
+                        {{ bytesDisplay(this.$store.state.connected.downSpeed) }}/s
                       </dd>
                     </div>
                     <div class="current-connection-grid border-t border-b lg:border-0 lg:border-l lg:border-r">
@@ -92,7 +95,7 @@
                         Up speed
                       </dt>
                       <dd>
-                        0.3 KB/s
+                        {{ bytesDisplay(this.$store.state.connected.upSpeed) }}/s
                       </dd>
                     </div>
                     <div class="current-connection-grid border-t lg:border-0 lg:border-l">
@@ -100,7 +103,7 @@
                         UnPaid traffic
                       </dt>
                       <dd>
-                        9.4 MB
+                        {{ bytesDisplay(this.$store.state.connected.unpaidTraffic) }}
                       </dd>
                     </div>
                   </dl>
@@ -122,8 +125,43 @@ export default {
   name: 'dashboard',
   components: { IdentIcon },
   data() {
-    return {
-      proxies: [
+    return {}
+  },
+  computed: {
+    balance() {
+      return (this.$store.state.balance / 1000000).toFixed(6)
+    }
+  },
+  watch: {},
+  mounted: async function() {
+    await this.syncAddress()
+    await this.syncBalance()
+    await this.syncProxies()
+    await this.setProxyConnected(this.randomInt(3))
+    await this.keepSyncConnected()
+  },
+  methods: {
+    bytesDisplay(n) {
+      if (n < 1000) {
+        return n + ' B'
+      } else if (n < 1000000) {
+        return (n / 1000).toFixed(1) + ' KB'
+      } else if (n < 1000000000) {
+        return (n / 1000000).toFixed(1) + ' MB'
+      }
+      return (n / 1000000000).toFixed(1) + 'GB'
+    },
+    randomInt(max) {
+      return Math.floor(Math.random() * (max + 1))
+    },
+    async syncAddress() {
+      await this.$store.dispatch('SET_ADDRESS', 'vfhs98j2y1W5u1y7Q4ap9A5f6bWu7A5rp')
+    },
+    async syncBalance() {
+      await this.$store.dispatch('SET_BALANCE', this.randomInt(20000000000))
+    },
+    async syncProxies() {
+      await this.$store.dispatch('SET_PROXIES', [
         {
           id: 0,
           connected: false,
@@ -140,7 +178,7 @@ export default {
         },
         {
           id: 2,
-          connected: true,
+          connected: false,
           country: 'United States',
           address: 'vxvyEU8DNgURkA36cxxTSqfc75f7DDS4S',
           multiple: 30
@@ -152,13 +190,27 @@ export default {
           address: 'vn6DEy87mm1wY5458Rj4xKWh4M6tSkbm5',
           multiple: 20
         }
-      ]
+      ])
+    },
+    async setProxyConnected(proxyId) {
+      await this.$store.dispatch('SET_PROXY_CONNECTED', proxyId)
+    },
+    async updateConnected() {
+      await this.$store.dispatch('SET_CONNECTED_DOWN_SPEED', this.randomInt(300000))
+      await this.$store.dispatch('SET_CONNECTED_UP_SPEED', this.randomInt(100000))
+      await this.$store.dispatch(
+        'SET_CONNECTED_UNPAID_TRAFFIC',
+        this.$store.state.connected.unpaidTraffic + this.randomInt(100000)
+      )
+    },
+    async keepSyncConnected() {
+      if (!this.$store.state.connected.updateInterval) {
+        await this.$store.dispatch('SET_CONNECTED_INTERVAL',
+          window.setInterval(this.updateConnected, 1000)
+        )
+      }
     }
-  },
-  computed: {},
-  watch: {},
-  mounted: async function() {},
-  methods: {}
+  }
 }
 </script>
 
@@ -209,7 +261,7 @@ export default {
 }
 
 .proxy-multiple {
-  @apply flex-shrink-0 inline-block px-2 py-0.5 text-teal-800 text-xs leading-4 font-medium bg-teal-200 rounded-full
+  @apply flex-shrink-0 inline-block px-2 py-0 text-teal-800 text-xs leading-4 font-medium bg-teal-200 rounded-full
 }
 
 .connected .proxy-multiple {
@@ -227,7 +279,7 @@ export default {
 .btn-connect {
   @apply px-4 border-transparent rounded-r-lg bg-indigo-500;
   @apply text-white text-xl;
-  @qpply transition duration-150 ease-in-out;
+@qpply transition duration-150 ease-in-out;
 }
 
 .btn-connect:hover {
@@ -268,94 +320,5 @@ export default {
 
 .current-connection-grid dd {
   @apply order-1 text-2xl leading-none font-extrabold text-indigo-600;
-}
-
-
-
-
-
-
-
-.label {
-  @apply block text-sm leading-5 font-medium text-gray-700;
-}
-
-.mnemonic-textarea {
-  @apply block w-full text-lg leading-8 rounded-md shadow-sm font-bold;
-  @apply transition duration-150 ease-in-out;
-}
-
-.input-wrap {
-  @apply mt-1 rounded-md shadow-sm;
-}
-
-.input {
-  @apply block w-full font-mono text-sm leading-5;
-}
-
-.sensitive .label {
-  @apply text-yellow-700;
-}
-
-.sensitive .input {
-  @apply bg-yellow-50 border-yellow-500 text-yellow-600;
-}
-
-.sensitive .mnemonic-textarea {
-  @apply bg-yellow-50 border-yellow-500 text-yellow-600;
-}
-
-.sensitive .mnemonic-textarea:focus {
-  @apply bg-transparent border-gray-300 text-gray-600;
-}
-
-.error .mnemonic-textarea {
-  @apply bg-red-50 text-red-600 border-red-600;
-}
-
-.error .label {
-  @apply text-red-800;
-}
-
-.safe .label {
-  @apply text-green-700;
-}
-
-.safe .input {
-  @apply bg-green-50 border-green-500 text-green-600;
-}
-
-.mnemonic-length-select {
-  @apply appearance-none w-full px-5 py-3 border border-transparent text-base leading-6 rounded-md text-gray-900 bg-white;
-  @apply transition duration-150 ease-in-out;
-}
-
-.mnemonic-length-select:focus {
-  @apply outline-none;
-}
-
-.btn-generate {
-  @apply w-full flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-500;
-  @apply transition duration-150 ease-in-out;
-}
-
-.btn-generate:hover {
-  @apply bg-indigo-400;
-}
-
-.btn-generate:focus {
-  @apply outline-none bg-indigo-400;
-}
-
-.security-tips-ul {
-  @apply list-disc pl-5;
-}
-
-.security-tips-ul li {
-  @apply leading-7;
-}
-
-.purpose {
-  @apply mt-1 text-xs text-gray-500 text-right;
 }
 </style>
