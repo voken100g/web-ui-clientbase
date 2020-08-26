@@ -37,8 +37,8 @@
                 {{ proxy.country }}
               </h3>
               <span v-if="true" class="proxy-multiple">
-              {{ proxy.multiple }}
-            </span>
+                x{{ proxy.multiple }}
+              </span>
             </div>
 
             <p class="proxy-address">

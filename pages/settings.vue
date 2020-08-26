@@ -50,7 +50,7 @@
       </label>
       <div class="mt-1 relative rounded-md shadow-sm">
         <input id="private-key"
-               class="form-input block w-full py-2 px-4 text-sm md:text-base sm:leading-5"
+               class="form-input block w-full py-2 px-4 text-sm md:text-base sm:leading-5 ipt"
                placeholder="Input your private key here"
                aria-describedby="private-key-description">
       </div>
@@ -63,16 +63,16 @@
 
 
     <div class="mt-6 border-t border-gray-200 pt-6">
-      <label for="email" class="block text-sm font-medium leading-5 text-gray-700">
+      <label for="port" class="block text-sm font-medium leading-5 text-gray-700">
         Socks5 port
       </label>
       <div class="mt-1 relative rounded-md shadow-sm">
-        <input id="email"
-               class="form-input block w-full pr-10 border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:shadow-outline-red sm:text-sm sm:leading-5"
+        <input id="port"
+               class="form-input block w-full pr-10 ipt error"
                placeholder="7890"
                value="7890"
                aria-invalid="true"
-               aria-describedby="email-error">
+               aria-describedby="port-error">
 
         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">

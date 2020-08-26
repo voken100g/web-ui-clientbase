@@ -124,6 +124,7 @@ export default {
           'faShieldAlt',
           'faGlobeAmericas',
           'faPlaneDeparture',
+          'faPaperPlane',
           'faHourglassHalf',
           'faSeedling',
           'faPlay',
