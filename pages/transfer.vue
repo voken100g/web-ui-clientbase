@@ -14,7 +14,8 @@
     </div>
 
     <div class="mt-6 py-12 px-4 md:px-6 bg-gray-50">
-      <div class="transfer-icon-wrap" :class="{ 'success': isAddressSuccess && isAmountSuccess, 'error': isAddressError || isAmountError}">
+      <div class="transfer-icon-wrap"
+           :class="{ 'success': isAddressSuccess && isAmountSuccess, 'error': isAddressError || isAmountError}">
         <fa :icon="['fas', 'paper-plane']"/>
       </div>
 
@@ -38,7 +39,7 @@
                      name="amount"
                      label="Amount"
 
-                     :value.sync="amount"
+                     v-model="amount"
                      :placeholder="amountPlaceHolder"
                      :description="amountDescription"
                      :status="amountStatus"
@@ -73,8 +74,7 @@ export default {
       toAddress: '',
       isAddressSuccess: false,
       isAddressError: false,
-      amount: '',
-      test: false
+      amount: ''
     }
   },
   watch: {
@@ -91,7 +91,9 @@ export default {
         if (amount === '') {
           this.amount = amount
         } else if (amount.slice(-1) === '.') {
-          this.amount = parseFloat(amount) + '.'
+          if (amount.length > 1) {
+            this.amount = parseFloat(amount) + '.'
+          }
         } else {
           this.amount = parseFloat(amount)
         }
@@ -101,12 +103,6 @@ export default {
   mounted: async function() {
   },
   computed: {
-    // toAddressSuccess() {
-    //   return vokenAddress.isAddress(this.toAddress)
-    // },
-    // toAddressError() {
-    //   return this.toAddress && !this.toAddressSuccess
-    // },
     amountPlaceHolder() {
       return 'Maximum: ' + this.$store.state.balance / 1000000 + ' VOKEN'
     },
@@ -134,7 +130,8 @@ export default {
     isAmountError() {
       return this.amount && !this.amountAffordable
     }
-  }
+  },
+  methods: {}
 }
 </script>
 
@@ -151,11 +148,4 @@ export default {
   @apply text-red-800;
 }
 
-.ipt {
-  @apply block w-full px-4 py-4;
-}
-
-.ipt-p {
-  @apply mt-2 ml-2 text-base leading-5;
-}
 </style>

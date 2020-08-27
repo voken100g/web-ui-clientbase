@@ -15,7 +15,8 @@
              :type="type"
              class="form-input w-full ipt"
              :class="[inputClass, status]"
-             v-model="inputValue"
+             :value="value"
+             @input="input"
              :placeholder="inputPlaceholder"
              :readonly="readonly">
 
@@ -54,7 +55,9 @@ export default {
     name: String,
     label: String,
     labelClass: {},
-    value: {},
+    value: {
+      default: ''
+    },
     placeholder: String,
     inputClass: {},
     inputWrapClass: {},
@@ -73,13 +76,11 @@ export default {
   },
   data() {
     return {
-      inputValue: this.value
+      //
     }
   },
   watch: {
-    inputValue() {
-      this.$emit('update:value', this.inputValue)
-    }
+    //
   },
   computed: {
     inputPlaceholder() {
@@ -88,6 +89,11 @@ export default {
       }
 
       return this.placeholder
+    }
+  },
+  methods: {
+    input(event) {
+      this.$emit('input', event.target.value);
     }
   }
 }
