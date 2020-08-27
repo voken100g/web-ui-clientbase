@@ -1,103 +1,142 @@
 <template>
-  <div class="container py-6">
-    <div class="flex items-center space-x-4">
-      <!-- On: "bg-indigo-600", Off: "bg-gray-200" -->
-      <span role="checkbox" tabindex="0" aria-checked="false"
-            :class="{ 'bg-indigo-600': showPrivateKey, 'bg-gray-200': !showPrivateKey }"
-            @click="togglePrivateKey"
-            class="relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:shadow-outline">
+  <div class="bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- On: "translate-x-5", Off: "translate-x-0" -->
-        <span :class="{ 'translate-x-5': showPrivateKey, 'translate-x-0': !showPrivateKey }"
-              aria-hidden="true"
-              class="relative inline-block h-5 w-5 rounded-full bg-white shadow transform transition ease-in-out duration-200">
+      <!-- Account -->
+      <div>
+        <div class="md:grid md:grid-cols-3 md:gap-6">
+          <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+              <h3 class="text-lg font-medium leading-6 text-gray-900">
+                Account
+              </h3>
+              <p class="mt-1 text-sm leading-5 text-gray-600">
+                VOKEN wallet information
+              </p>
+            </div>
+          </div>
+          <div class="mt-5 md:mt-0 md:col-span-2">
+            <div class="shadow sm:rounded-md sm:overflow-hidden">
+              <div class="px-4 py-5 bg-white sm:p-6">
 
-          <!-- On: "opacity-0 ease-out duration-100", Off: "opacity-100 ease-in duration-200" -->
-          <span :class="{ 'opacity-0 ease-out duration-100': showPrivateKey, 'opacity-100 ease-in duration-200': !showPrivateKey }"
-                class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity">
-            <svg class="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">
-              <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round"/>
-            </svg>
-          </span>
+                <!-- address -->
+                <labeled-input name="address"
+                               label="Address"
 
-          <!-- On: "opacity-100 ease-in duration-200", Off: "opacity-0 ease-out duration-100" -->
-          <span :class="{ 'opacity-100 ease-in duration-200': showPrivateKey, 'opacity-0 ease-out duration-100': !showPrivateKey }"
-                class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity">
-            <svg class="h-3 w-3 text-indigo-600" fill="currentColor" viewBox="0 0 12 12">
-              <path
-                d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z"/>
-            </svg>
-          </span>
+                               :value.sync="address"
+                               input-class="bg-gray-50 text-sm text-gray-400"
+                               :readonly="true"/>
 
-        </span>
-      </span>
+                <!-- identify icon -->
+                <div v-show="$store.state.address" class="mt-6">
+                  <label class="block text-sm font-medium leading-5 label">
+                    Identify icon
+                  </label>
 
-      <span v-show="showPrivateKey" class="text-gray-500">
-        Show private key option
-      </span>
-      <span v-show="!showPrivateKey" class="text-gray-400">
-        Hide private key option
-      </span>
-    </div>
+                  <ident-icon :value="$store.state.address"
+                              class="mt-2 w-12 h-12 rounded-full border border-gray-100 shadow-md"/>
+                </div>
 
+                <!-- private key -->
+                <labeled-input v-show="showPrivateKey"
+                               class="mt-6"
+                               name="private-key"
+                               label="Private key"
 
-    <div v-show="showPrivateKey" class="mt-6 ml-6 mb-10">
-      <label for="private-key"
-             class="block text-sm font-medium leading-5 text-gray-700"
-      >
-        Private key
-      </label>
-      <div class="mt-1 relative rounded-md shadow-sm">
-        <input id="private-key"
-               class="form-input block w-full py-2 px-4 text-sm md:text-base sm:leading-5 ipt"
-               placeholder="Input your private key here"
-               aria-describedby="private-key-description">
-      </div>
-      <p id="private-key-description"
-         class="mt-2 text-sm text-gray-500"
-      >
-        Private key description.
-      </p>
-    </div>
+                               :value.sync="privateKey"
+                               input-class="text-sm"
+                               description="Private key description"/>
+              </div>
 
+              <div class="px-4 py-3 flex items-center justify-between bg-gray-50 text-right sm:px-6">
+                <div class="flex items-center space-x-4 text-sm">
+                  <switch-on :isOn.sync="showPrivateKey"/>
 
-    <div class="mt-6 border-t border-gray-200 pt-6">
-      <label for="port" class="block text-sm font-medium leading-5 text-gray-700">
-        Socks5 port
-      </label>
-      <div class="mt-1 relative rounded-md shadow-sm">
-        <input id="port"
-               class="form-input block w-full pr-10 ipt error"
-               placeholder="7890"
-               value="7890"
-               aria-invalid="true"
-               aria-describedby="port-error">
+                  <span v-show="showPrivateKey" class="text-gray-500">
+                    Show private key option
+                  </span>
+                  <span v-show="!showPrivateKey" class="text-gray-400">
+                    Hide private key option
+                  </span>
+                </div>
 
-        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-          </svg>
+                <button class="btn">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <p class="mt-2 text-sm text-red-600" id="email-error">
-        Port number should be in 1-65535
-      </p>
-    </div>
+      <line-between/>
 
-    <div class="mt-8">
-      <button class="btn">Save</button>
+      <!-- proxy configuration -->
+      <div>
+        <div class="md:grid md:grid-cols-3 md:gap-6">
+          <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+              <h3 class="text-lg font-medium leading-6 text-gray-900">
+                Proxy
+              </h3>
+              <p class="mt-1 text-sm leading-5 text-gray-600">
+                Proxy configuration
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-5 md:mt-0 md:col-span-2">
+            <div class="shadow sm:rounded-md sm:overflow-hidden">
+              <div class="px-4 py-5 bg-white sm:p-6">
+
+                <!-- socks5 port -->
+                <labeled-input name="socks5-port"
+                               label="Socks5 port"
+
+                               :value.sync="socks5Port"
+                               placeholder="1 - 65535, default: 7890"
+                               description="Listening port for the Socks5 proxy"/>
+              </div>
+
+              <div class="px-4 py-3 flex items-center justify-between bg-gray-50 text-right sm:px-6">
+                <div></div>
+
+                <button class="btn">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
+
 </template>
 
 <script>
+import LineBetween from '@/components/LineBetween'
+import IdentIcon from '@/components/IdentIcon'
+import SwitchOn from '@/components/SwitchOn'
+import LabeledInput from '@/components/LabeledInput'
+
 export default {
   name: 'settings',
+  components: { LabeledInput, SwitchOn, IdentIcon, LineBetween },
   data() {
     return {
-      showPrivateKey: false
+      test: '123',
+      address: this.$store.state.address,
+      privateKey: '',
+      showPrivateKey: false,
+      socks5Port: ''
+    }
+  },
+  watch: {
+    test() {
+      this.test = parseFloat(this.test)
+      console.log('test', this.test)
     }
   },
   methods: {
@@ -109,5 +148,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

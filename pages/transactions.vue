@@ -1,5 +1,5 @@
 <template>
-  <div class="my-6">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <h1 class="text-2xl text-gray-500">Get mountains via axios:</h1>
 
     <div class="mt-4">

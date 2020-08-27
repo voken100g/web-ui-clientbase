@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-6">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <!-- wallet -->
     <div v-show="$store.state.address"
          class="flex flex-col lg:flex-row items-center justify-center text-center space-y-2 lg:space-y-0 space-x-8">

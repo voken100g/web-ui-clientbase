@@ -23,19 +23,19 @@
 /*
 ** label
  */
-label {
+.label {
   @apply text-gray-700;
 }
 
-label.success {
+.label.success {
   @apply text-green-700;
 }
 
-label.warning {
+.label.warning {
   @apply text-yellow-700;
 }
 
-label.error {
+.label.error {
   @apply text-red-700;
 }
 
@@ -83,7 +83,7 @@ label.error {
 
 .ipt.error:focus,
 .txa.error:focus {
-  @apply border-red-500 shadow-outline-red;
+  @apply border-red-400 shadow-outline-red;
 }
 
 .ipt.warning,
@@ -96,3 +96,10 @@ label.error {
   @apply border-yellow-400 shadow-outline-yellow;
 }
 
+.ipt-icon {
+  @apply absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none;
+}
+
+.ipt-ident-icon {
+  @apply absolute inset-y-0 right-0 pr-3 flex items-center;
+}

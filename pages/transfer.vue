@@ -1,5 +1,5 @@
 <template>
-  <div class="py-6">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="bg-gray-800 max-w-screen-xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
       <div class="lg:flex lg:items-center">
         <div class="lg:w-0 lg:flex-1">
@@ -14,54 +14,39 @@
     </div>
 
     <div class="mt-6 py-12 px-4 md:px-6 bg-gray-50">
-      <div class="wallet-icon-wrap" :class="{ 'success': toAddressSuccess, 'error': toAddressError }">
+      <div class="transfer-icon-wrap" :class="{ 'success': isAddressSuccess && isAmountSuccess, 'error': isAddressError || isAmountError}">
         <fa :icon="['fas', 'paper-plane']"/>
       </div>
 
-      <!-- To Address -->
-      <div class="mt-6">
-        <label for="to-address" :class="{ 'success': toAddressSuccess, 'error': toAddressError }">
-          To address
-        </label>
+      <!-- To address -->
+      <labeled-input-address class="mt-8"
+                             name="to-address"
+                             label="To address"
 
-        <div class="mt-4 relative">
-          <input id="to-address"
-                 ref="to-address"
-                 class="form-input ipt"
-                 :class="{ 'success': toAddressSuccess, 'error': toAddressError }"
-                 v-model="toAddress"
-                 placeholder="Recipient VOKEN address"/>
+                             :value.sync="toAddress"
+                             :isAddressSuccess.sync="isAddressSuccess"
+                             :isAddressError.sync="isAddressError"
+                             placeholder="Recipient VOKEN address"
 
-          <div v-show="toAddressSuccess" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-            <ident-icon :value="toAddress" class="w-10 h-10 rounded-full border-2 border-green-50 shadow-md"/>
-          </div>
-        </div>
-
-        <p v-show="toAddressError" class="ipt-p error">
-          Not a valid VOKEN wallet address.
-        </p>
-      </div>
+                             label-class="text-xl"
+                             input-wrap-class="mt-4"
+                             input-class="text-base p-4"
+                             description-class="mt-2"/>
 
       <!-- Amount -->
-      <div class="mt-8">
-        <label for="amount" :class="{ 'success': amountSuccess, 'error': amountError }">
-          Amount
-        </label>
+      <labeled-input class="mt-8"
+                     name="amount"
+                     label="Amount"
 
-        <div class="mt-4">
-          <input id="amount"
-                 ref="amount"
-                 class="form-input ipt"
-                 :class="{ 'success': amountSuccess, 'error': amountError }"
-                 type="tel"
-                 v-model="amount"
-                 :placeholder="amountPlaceHolder"/>
-        </div>
+                     :value.sync="amount"
+                     :placeholder="amountPlaceHolder"
+                     :description="amountDescription"
+                     :status="amountStatus"
 
-        <p v-show="amountError" class="ipt-p error">
-          Not enough VOKEN to send.
-        </p>
-      </div>
+                     label-class="text-xl"
+                     input-wrap-class="mt-4"
+                     input-class="text-base p-4"
+                     description-class="mt-2"/>
 
       <div class="mt-12 text-right">
         <button class="btn">
@@ -77,16 +62,19 @@
 
 <script>
 import IdentIcon from '~/components/IdentIcon'
-import vokenAddress from '../utils/voken-address'
+import LabeledInput from '@/components/LabeledInput'
+import LabeledInputAddress from '@/components/LabeledInputAddress'
 
 export default {
   name: 'transfer',
-  components: { IdentIcon },
-  layout: 'completed',
+  components: { LabeledInputAddress, LabeledInput, IdentIcon },
   data() {
     return {
       toAddress: '',
-      amount: ''
+      isAddressSuccess: false,
+      isAddressError: false,
+      amount: '',
+      test: false
     }
   },
   watch: {
@@ -113,22 +101,37 @@ export default {
   mounted: async function() {
   },
   computed: {
-    toAddressSuccess() {
-      return vokenAddress.isAddress(this.toAddress)
-    },
-    toAddressError() {
-      return this.toAddress && !this.toAddressSuccess
-    },
+    // toAddressSuccess() {
+    //   return vokenAddress.isAddress(this.toAddress)
+    // },
+    // toAddressError() {
+    //   return this.toAddress && !this.toAddressSuccess
+    // },
     amountPlaceHolder() {
       return 'Maximum: ' + this.$store.state.balance / 1000000 + ' VOKEN'
     },
     amountAffordable() {
       return this.amount * 1000000 <= this.$store.state.balance
     },
-    amountSuccess() {
+    amountStatus() {
+      if (this.amount) {
+        if (this.amountAffordable) {
+          return 'success'
+        }
+        return 'error'
+      }
+      return null
+    },
+    amountDescription() {
+      if (this.amountStatus === 'error') {
+        return 'Not enough VOKEN to send'
+      }
+      return ''
+    },
+    isAmountSuccess() {
       return this.amount && this.amountAffordable
     },
-    amountError() {
+    isAmountError() {
       return this.amount && !this.amountAffordable
     }
   }
@@ -136,20 +139,16 @@ export default {
 </script>
 
 <style scoped>
-.wallet-icon-wrap {
+.transfer-icon-wrap {
   @apply text-center text-4xl text-gray-800;
 }
 
-.wallet-icon-wrap.success {
+.transfer-icon-wrap.success {
   @apply text-green-800;
 }
 
-.wallet-icon-wrap.error {
+.transfer-icon-wrap.error {
   @apply text-red-800;
-}
-
-label {
-  @apply block text-xl font-medium leading-5;
 }
 
 .ipt {

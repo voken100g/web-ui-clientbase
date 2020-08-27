@@ -1,6 +1,6 @@
 export const state = () => ({
-  address: null,
-  balance: null,
+  address: '',
+  balance: 0,
   proxies: [],
   connected: {
     downSpeed: 0,

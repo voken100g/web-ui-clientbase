@@ -1,20 +1,18 @@
 <template>
   <div>
     <SiteNav/>
-
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <Nuxt/>
-    </div>
+    <Nuxt/>
+    <PreviewEdition class="my-20"/>
   </div>
-
 </template>
 
 <script>
 import SiteNav from '../components/SiteNav'
+import PreviewEdition from '@/components/PreviewEdition'
 
 export default {
   name: 'completed',
-  components: { SiteNav }
+  components: { PreviewEdition, SiteNav }
 }
 
 </script>
