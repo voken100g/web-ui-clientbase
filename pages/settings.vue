@@ -94,6 +94,8 @@
                                label="Socks5 port"
 
                                :value.sync="socks5Port"
+                               input-class="text-sm"
+
                                placeholder="1 - 65535, default: 7890"
                                description="Listening port for the Socks5 proxy"/>
               </div>
