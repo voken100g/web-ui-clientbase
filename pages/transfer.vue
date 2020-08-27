@@ -79,25 +79,7 @@ export default {
   },
   watch: {
     amount() {
-      if (this.amount) {
-        let amount = ('' + this.amount)
-          .replace(/[^\d.]/g, '')
-          .replace(/\.{2,}/g, '.')
-          .replace('.', '#')
-          .replace(/\./g, '')
-          .replace('#', '.')
-          .replace(/^(\d+)\.(\d{0,6}).*$/, '$1.$2')
-
-        if (amount === '') {
-          this.amount = amount
-        } else if (amount.slice(-1) === '.') {
-          if (amount.length > 1) {
-            this.amount = parseFloat(amount) + '.'
-          }
-        } else {
-          this.amount = parseFloat(amount)
-        }
-      }
+      this.fixAmount()
     }
   },
   mounted: async function() {
@@ -131,7 +113,29 @@ export default {
       return this.amount && !this.amountAffordable
     }
   },
-  methods: {}
+  methods: {
+    fixAmount() {
+      if (this.amount) {
+        let amount = ('' + this.amount)
+          .replace(/[^\d.]/g, '')
+          .replace(/\.{2,}/g, '.')
+          .replace('.', '#')
+          .replace(/\./g, '')
+          .replace('#', '.')
+          .replace(/^(\d+)\.(\d{0,6}).*$/, '$1.$2')
+
+        if (amount === '') {
+          this.amount = amount
+        } else if (amount.slice(-1) === '.') {
+          if (amount.length > 1) {
+            this.amount = parseFloat(amount) + '.'
+          }
+        } else {
+          this.amount = parseFloat(amount)
+        }
+      }
+    }
+  }
 }
 </script>
 
