@@ -1,8 +1,21 @@
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
 /*!
   * vue-router v3.4.3
   * (c) 2020 Evan You
   * @license MIT
   */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
 
 /*!
  * The buffer module from node.js, for the browser.
@@ -36,3 +49,5 @@
  */
 
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+//! moment.js
