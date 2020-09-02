@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <layout-container class="py-6">
     <div class="bg-gray-800 max-w-screen-xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
       <div class="lg:flex lg:items-center">
         <div class="lg:w-0 lg:flex-1">
@@ -20,34 +20,34 @@
       </div>
 
       <!-- To address -->
-      <labeled-input-address class="mt-8"
-                             name="to-address"
-                             label="To address"
+      <layout-input-address class="mt-8"
+                            name="to-address"
+                            label="To address"
 
-                             :value.sync="toAddress"
-                             :isAddressSuccess.sync="isAddressSuccess"
-                             :isAddressError.sync="isAddressError"
-                             placeholder="Recipient VOKEN address"
+                            :value.sync="toAddress"
+                            :isAddressSuccess.sync="isAddressSuccess"
+                            :isAddressError.sync="isAddressError"
+                            placeholder="Recipient VOKEN address"
 
-                             label-class="text-xl"
-                             input-wrap-class="mt-4"
-                             input-class="text-base p-4"
-                             description-class="mt-2"/>
+                            label-class="text-xl"
+                            wrap-class="mt-4"
+                            input-class="text-base p-4"
+                            description-class="mt-2"/>
 
       <!-- Amount -->
-      <labeled-input class="mt-8"
-                     name="amount"
-                     label="Amount"
+      <layout-input class="mt-8"
+                    name="amount"
+                    label="Amount"
 
-                     v-model="amount"
-                     :placeholder="amountPlaceHolder"
-                     :description="amountDescription"
-                     :status="amountStatus"
+                    v-model="amount"
+                    :placeholder="amountPlaceHolder"
+                    :description="amountDescription"
+                    :status="amountStatus"
 
-                     label-class="text-xl"
-                     input-wrap-class="mt-4"
-                     input-class="text-base p-4"
-                     description-class="mt-2"/>
+                    label-class="text-xl"
+                    wrap-class="mt-4"
+                    input-class="text-base p-4"
+                    description-class="mt-2"/>
 
       <div class="mt-12 text-right">
         <button class="btn">
@@ -58,17 +58,17 @@
       </div>
 
     </div>
-  </div>
+  </layout-container>
 </template>
 
 <script>
-import IdentIcon from '~/components/IdentIcon'
-import LabeledInput from '@/components/LabeledInput'
-import LabeledInputAddress from '@/components/LabeledInputAddress'
+import LayoutContainer from '@/components/LayoutContainer'
+import LayoutInputAddress from '@/components/LayoutInputAddress'
+import LayoutInput from '@/components/LayoutInput'
 
 export default {
   name: 'transfer',
-  components: { LabeledInputAddress, LabeledInput, IdentIcon },
+  components: { LayoutInput, LayoutInputAddress, LayoutContainer },
   data() {
     return {
       toAddress: '',
@@ -79,7 +79,25 @@ export default {
   },
   watch: {
     amount() {
-      this.fixAmount()
+      if (this.amount) {
+        let amount = ('' + this.amount)
+          .replace(/[^\d.]/g, '')
+          .replace(/\.{2,}/g, '.')
+          .replace('.', '#')
+          .replace(/\./g, '')
+          .replace('#', '.')
+          .replace(/^(\d+)\.(\d{0,6}).*$/, '$1.$2')
+
+        if (amount === '') {
+          this.amount = amount
+        } else if (amount.slice(-1) === '.') {
+          if (amount.length > 1) {
+            this.amount = parseFloat(amount) + '.'
+          }
+        } else {
+          this.amount = parseFloat(amount)
+        }
+      }
     }
   },
   mounted: async function() {
@@ -111,29 +129,6 @@ export default {
     },
     isAmountError() {
       return this.amount && !this.amountAffordable
-    }
-  },
-  methods: {
-    fixAmount() {
-      if (this.amount) {
-        let amount = ('' + this.amount)
-          .replace(/[^\d.]/g, '')
-          .replace(/\.{2,}/g, '.')
-          .replace('.', '#')
-          .replace(/\./g, '')
-          .replace('#', '.')
-          .replace(/^(\d+)\.(\d{0,6}).*$/, '$1.$2')
-
-        if (amount === '') {
-          this.amount = amount
-        } else if (amount.slice(-1) === '.') {
-          if (amount.length > 1) {
-            this.amount = parseFloat(amount) + '.'
-          }
-        } else {
-          this.amount = parseFloat(amount)
-        }
-      }
     }
   }
 }

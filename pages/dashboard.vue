@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <layout-container class="py-6">
     <!-- wallet -->
     <div v-show="$store.state.address"
          class="flex flex-col lg:flex-row items-center justify-center text-center space-y-2 lg:space-y-0 space-x-8">
@@ -117,15 +117,16 @@
 
       </div>
     </div>
-  </div>
+  </layout-container>
 </template>
 
 <script>
 import IdentIcon from '~/components/IdentIcon'
+import LayoutContainer from '@/components/LayoutContainer'
 
 export default {
   name: 'dashboard',
-  components: { IdentIcon },
+  components: { LayoutContainer, IdentIcon },
   data() {
     return {}
   },

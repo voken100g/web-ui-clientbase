@@ -9,30 +9,32 @@
     </label>
 
     <div class="mt-1 relative rounded-md shadow-sm"
-         :class="inputWrapClass"
+         :class="wrapClass"
     >
-      <input :id="name"
+      <input class="form-input w-full py-4 ipt" :class="[inputClass, statusClass]"
+
+             :id="name"
              type="text"
-             class="form-input w-full py-4 ipt"
-             :class="[inputClass, statusClass]"
              v-model="inputValue"
              :placeholder="inputPlaceholder">
 
       <div v-show="statusClass==='success'" class="ipt-ident-icon">
         <ident-icon :value="inputValue" class="w-10 h-10 rounded-full border-2 border-green-50 shadow-md"/>
       </div>
+
       <div v-show="statusClass==='error'" class="ipt-icon">
-        <svg-error class="h-5 w-5 text-red-600"/>
+        <svg-error/>
       </div>
     </div>
 
     <p v-show="statusClass==='error'"
-       class="mt-1 ml-1 text-sm ipt-p"
-       :class="[descriptionClass, statusClass]">
+       class="mt-1 ml-1 text-sm ipt-p" :class="[descriptionClass, statusClass]"
+    >
       Not a valid VOKEN wallet address
     </p>
   </div>
 </template>
+
 
 <script>
 import IdentIcon from '~/components/IdentIcon'
@@ -40,18 +42,21 @@ import vokenAddress from '../utils/voken-address'
 import SvgError from '@/components/SvgError'
 
 export default {
-  name: 'LabeledInputAddress',
+  name: 'LayoutInputAddress',
   components: { SvgError, IdentIcon },
   props: {
     name: String,
-    label: String,
+    label: {
+      type: String,
+      default: 'VOKEN address'
+    },
 
     value: {},
     placeholder: String,
 
     labelClass: {},
     inputClass: {},
-    inputWrapClass: {},
+    wrapClass: {},
     descriptionClass: {}
   },
   data() {
@@ -69,7 +74,7 @@ export default {
   computed: {
     inputPlaceholder() {
       if (!this.placeholder) {
-        return 'VOKEN address'
+        return this.label
       }
 
       return this.placeholder

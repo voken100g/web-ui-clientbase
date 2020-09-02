@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto sm:px-6 lg:px-8 py-6">
+  <layout-container class="py-6">
     <h1>
       Transactions
     </h1>
@@ -72,7 +72,7 @@
     <!--        {{ mountain.title }}-->
     <!--      </div>-->
     <!--    </div>-->
-  </div>
+  </layout-container>
 </template>
 
 <script>
@@ -82,9 +82,11 @@ import * as crypto from 'crypto'
 import vokenAddress from '../utils/voken-address'
 import * as client from '../utils/client'
 import * as fn from '../utils/functions'
+import LayoutContainer from '@/components/LayoutContainer'
 
 export default {
   name: 'transactions',
+  components: { LayoutContainer },
   data() {
     return {
       transactions: [],

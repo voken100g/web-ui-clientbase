@@ -39,28 +39,14 @@
   @apply text-red-700;
 }
 
-/*
-** input p
- */
-.ipt-p {
-  @apply text-gray-500;
-}
-
-.ipt-p.success {
-  @apply text-green-700;
-}
-
-.ipt-p.warning {
-  @apply text-yellow-700;
-}
-
-.ipt-p.error {
-  @apply text-red-700;
-}
 
 /*
 ** input
  */
+.ipt {
+  @apply text-gray-700;
+}
+
 .ipt:focus,
 .txa:focus {
   @apply border-indigo-300 shadow-outline-indigo;
@@ -96,10 +82,46 @@
   @apply border-yellow-400 shadow-outline-yellow;
 }
 
+
+
+/*
+** input icon
+ */
 .ipt-icon {
   @apply absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none;
 }
 
 .ipt-ident-icon {
   @apply absolute inset-y-0 right-0 pr-3 flex items-center;
+}
+
+.ipt-icon.success {
+  @apply text-green-600;
+}
+
+.ipt-icon.warning {
+  @apply text-yellow-600;
+}
+
+.ipt-icon.error {
+  @apply text-red-600;
+}
+
+/*
+** input p
+ */
+.ipt-p {
+  @apply text-gray-500;
+}
+
+.ipt-p.success {
+  @apply text-green-700;
+}
+
+.ipt-p.warning {
+  @apply text-yellow-700;
+}
+
+.ipt-p.error {
+  @apply text-red-700;
 }

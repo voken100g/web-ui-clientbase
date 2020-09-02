@@ -1,7 +1,6 @@
 <template>
   <div class="bg-gray-50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
+    <layout-container class="py-6">
       <!-- Account -->
       <div>
         <div class="md:grid md:grid-cols-3 md:gap-6">
@@ -19,46 +18,44 @@
             <div class="shadow sm:rounded-md sm:overflow-hidden">
               <div class="px-4 py-5 bg-white sm:p-6">
 
-                <!-- address -->
-                <labeled-input name="address"
-                               label="Address"
-
-                               :value.sync="address"
-                               input-class="bg-gray-50 text-sm text-gray-400"
-                               :readonly="true"/>
-
                 <!-- identify icon -->
-                <div v-show="$store.state.address" class="mt-6">
-                  <label class="block text-sm font-medium leading-5 label">
-                    Identify icon
-                  </label>
-
+                <div v-show="$store.state.address" class="flex justify-center">
                   <ident-icon :value="$store.state.address"
                               class="mt-2 w-12 h-12 rounded-full border border-gray-100 shadow-md"/>
                 </div>
 
-                <!-- private key -->
-                <labeled-input v-show="showPrivateKey"
-                               class="mt-6"
-                               name="private-key"
-                               label="Private key"
 
-                               :value.sync="privateKey"
-                               input-class="text-sm"
-                               description="Private key description"/>
+                <!-- address -->
+                <layout-input :class="{ 'mt-6': address }"
+                              name="address"
+                              label="Address"
+
+                              :value.sync="address"
+                              input-class="bg-gray-50 text-sm text-gray-400"
+                              :readonly="true"/>
+
+                <!-- private key -->
+                <layout-input v-show="showPrivateKey"
+                              class="mt-6"
+                              name="private-key"
+                              label="Private key"
+
+                              :value.sync="privateKey"
+                              input-class="text-sm"
+                              description="Private key description"/>
+
               </div>
 
               <div class="px-4 py-3 flex items-center justify-between bg-gray-50 text-right sm:px-6">
-                <div class="flex items-center space-x-4 text-sm">
-                  <switch-on :isOn.sync="showPrivateKey"/>
-
-                  <span v-show="showPrivateKey" class="text-gray-500">
+                <layout-switch :is-on.sync="showPrivateKey">
+                  <template #textOn>
                     Show private key option
-                  </span>
-                  <span v-show="!showPrivateKey" class="text-gray-400">
+                  </template>
+
+                  <template #textOff>
                     Hide private key option
-                  </span>
-                </div>
+                  </template>
+                </layout-switch>
 
                 <button class="btn">
                   Save
@@ -90,14 +87,14 @@
               <div class="px-4 py-5 bg-white sm:p-6">
 
                 <!-- socks5 port -->
-                <labeled-input name="socks5-port"
-                               label="Socks5 port"
+                <layout-input name="socks5-port"
+                              label="Socks5 port"
 
-                               :value.sync="socks5Port"
-                               input-class="text-sm"
+                              :value.sync="socks5Port"
+                              input-class="text-sm"
 
-                               placeholder="1 - 65535, default: 7890"
-                               description="Listening port for the Socks5 proxy"/>
+                              placeholder="1 - 65535, default: 5678"
+                              description="Listening port for the Socks5 proxy"/>
               </div>
 
               <div class="px-4 py-3 flex items-center justify-between bg-gray-50 text-right sm:px-6">
@@ -111,21 +108,20 @@
           </div>
         </div>
       </div>
-
-    </div>
+    </layout-container>
   </div>
-
 </template>
 
 <script>
 import LineBetween from '@/components/LineBetween'
 import IdentIcon from '@/components/IdentIcon'
-import SwitchOn from '@/components/SwitchOn'
-import LabeledInput from '@/components/LabeledInput'
+import LayoutSwitch from '@/components/LayoutSwitch'
+import LayoutContainer from '@/components/LayoutContainer'
+import LayoutInput from '@/components/LayoutInput'
 
 export default {
   name: 'settings',
-  components: { LabeledInput, SwitchOn, IdentIcon, LineBetween },
+  components: { LayoutInput, LayoutContainer, LayoutSwitch, IdentIcon, LineBetween },
   data() {
     return {
       test: '123',
